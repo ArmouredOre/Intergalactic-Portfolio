@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="title" content="Space Shuttle">
+        <meta name="description" content="This is my portfolio website.">
+        <meta name="keywords" content="html, css, javascript, web development, portfolio">
+        <meta name="author" content="Swaraj Mandar Rane">
+        <link rel="Stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="cockpit">
+            <div id="screen">
+                <div id="planet-container"></div>
+                <div id="extraction-popup">
+                    <div id="popup-content">
+                        <button id="close-popup" class="buttons small">X</button>
+                        <h2 id="extracted-title">Analysis</h2>
+                        <p id="extracted-info">Data loading...</p>
+                    </div>
+                </div>
+            </div> 
+            <div id="dashboard">
+                <div id="map-panel">
+                    <iframe src="map.html" id="map" allowfullscreen></iframe>
+                    <div class="label">ATLAS</div>
+                </div>
+                <div id="motion">
+                    <button id="next-planet" class="buttons">NEXT PLANET</button>
+                    <button id="orbit" class="buttons">ORBIT</button>
+                </div>
+                <div id="time-machine">
+                    <div id="time-screen">1x</div>
+                    <div id="controls">
+                        <button id="backward" class="buttons small" >&lt;&lt;</button>
+                        <button id="forward" class="buttons small">&gt;&gt;</button>
+                    </div>
+                    <div class="label">Time Machine</div>
+                </div>
+                <div id="description-panel">
+                    <h3 id="planet-name">Gaia</h3>
+                    <p id="description">This shows the information of the creator of this universe</p>
+                    <p id="orbit-warning">Orbit this planet to extract information</p>
+                    <button id="extract" class="buttons">EXTRACT INFORMATION</button>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="planet.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

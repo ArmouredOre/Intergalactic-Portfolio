@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="title" content="Map">
+        <link rel="Stylesheet" href="map.css">
+    </head>
+    <body>
+        <svg class="path-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polyline points="10,70 36,30 63,70 90,30" />
+        </svg>
+        <button id="Gaia" class="planet p1">Gaia</button>
+        <button id="Eros" class="planet p2">Eros</button>
+        <button id="Ares" class="planet p3">Ares</button>
+        <button id="Hera" class="planet p4">Hera</button>
+
+        <script>
+            document.querySelectorAll('.planet').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    window.parent.postMessage({
+                        type: 'CHANGE_PLANET',
+                        planetId: e.target.id
+                    }, '*');
+                });
+            });
+
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'UPDATE_MAP') {
+                    document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
+                    const activePlanet = document.getElementById(event.data.planetId);
+                    if (activePlanet) {
+                        activePlanet.classList.add('active');
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
