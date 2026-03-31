@@ -42,29 +42,113 @@ const planets = {
         texture: "Gaia.jpg",
         size: 0.73,
         displayName: "Gaia",
-        description: "This shows the information of the creator of this universe",
-        extractedData: "Atmosphere: 78% Nitrogen, 21% Oxygen. Status: Highly populated. Portfolio Creator coordinates confirmed."
+        description: "Introduction - Meet the Creator",
+        extractedData: `<div class="portfolio-intro">
+            <h3>Welcome to My Universe</h3>
+            <p class="intro-text">I'm <strong>Swaraj Mandar Rane</strong>, a passionate developer crafting digital experiences.</p>
+            <div class="intro-details">
+                <div class="intro-item">
+                    <span class="intro-label">Mission</span>
+                    <span class="intro-value">Building innovative solutions through code</span>
+                </div>
+                <div class="intro-item">
+                    <span class="intro-label">Location</span>
+                    <span class="intro-value">Earth, India</span>
+                </div>
+                <div class="intro-item">
+                    <span class="intro-label">Status</span>
+                    <span class="intro-value">Open for Opportunities</span>
+                </div>
+            </div>
+            <p class="intro-footer">Navigate through the planets to explore my portfolio</p>
+        </div>`
     },
     Eros: {
         texture: "Eros.jpg",
         size: 0.61,
         displayName: "Eros",
-        description: "A mysterious dwarf planet in the Kuiper Belt.",
-        extractedData: "Atmosphere: Thin methane. Surface Temperature: 30K. High concentrations of tholins detected. No life signs."
+        description: "CV/Resume - Professional Journey",
+        extractedData: `<div class="cv-container">
+            <iframe src="SwarajMandarRane-Resume copy.pdf" class="cv-pdf" title="CV/Resume"></iframe>
+        </div>`
     },
     Ares: {
         texture: "Ares.jpg",
         size: 0.89,
         displayName: "Ares",
-        description: "A mysterious dwarf planet in the Kuiper Belt.",
-        extractedData: "Atmosphere: Thin methane. Surface Temperature: 30K. High concentrations of tholins detected. No life signs."
+        description: "Projects - My Work",
+        extractedData: `<div class="projects-container">
+            <h3>Projects</h3>
+            <div class="projects-placeholder">
+                <div class="placeholder-icon">🚀</div>
+                <p class="placeholder-text">Exciting projects are in development and will be launched soon.</p>
+                <p class="placeholder-subtext">Check back later to see my latest work and creations!</p>
+            </div>
+        </div>`
     },
     Hera: {
         texture: "Hera.jpg",
         size: 1,
         displayName: "Hera",
-        description: "A mysterious dwarf planet in the Kuiper Belt.",
-        extractedData: "Atmosphere: Thin methane. Surface Temperature: 30K. High concentrations of tholins detected. No life signs."
+        description: "Skills - Technologies & Tools",
+        extractedData: `<div class="skills-container">
+            <h3>Technical Skills</h3>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <div class="skill-category-title">Languages</div>
+                    <div class="skill-bar">
+                        <span class="skill-name">C</span>
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">C++</span>
+                        <div class="skill-progress" style="width: 80%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">Python</span>
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">Java</span>
+                        <div class="skill-progress" style="width: 75%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">JavaScript</span>
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">Web Technologies</div>
+                    <div class="skill-bar">
+                        <span class="skill-name">HTML</span>
+                        <div class="skill-progress" style="width: 90%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">CSS</span>
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">React</span>
+                        <div class="skill-progress" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">Other Skills</div>
+                    <div class="skill-bar">
+                        <span class="skill-name">ALP</span>
+                        <div class="skill-progress" style="width: 70%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">R</span>
+                        <div class="skill-progress" style="width: 65%"></div>
+                    </div>
+                    <div class="skill-bar">
+                        <span class="skill-name">SQL</span>
+                        <div class="skill-progress" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>`
     }
 };
 
@@ -90,8 +174,8 @@ let currentPlanetIndex = 0;
 let isAnimating = false;
 
 // ===== SMOOTH 3D TRANSITION FUNCTION =====
-function switchPlanet(name) {
-    if (isAnimating) return; 
+function switchPlanet(name, onComplete) {
+    if (isAnimating) return;
     isAnimating = true; // Lock the button
 
     const data = planets[name];
@@ -104,11 +188,11 @@ function switchPlanet(name) {
     const enterDuration = 3000;
     const dropDistance = -65;
     const topDistance = 0;
-    const enlargeScale = 15; 
+    const enlargeScale = 15;
 
-    const startScale = planetMesh.scale.x; 
-    const targetScale = data.size; 
-    
+    const startScale = planetMesh.scale.x;
+    const targetScale = data.size;
+
     let startTime = null;
 
     // --- PHASE 1: EXIT (Drop down and disappear) ---
@@ -117,7 +201,7 @@ function switchPlanet(name) {
         let progress = (timestamp - startTime) / leaveDuration;
 
         if (progress < 1) {
-            const ease = progress * progress * progress; 
+            const ease = progress * progress * progress;
             planetMesh.position.y = dropDistance * ease;
             const currentScale = startScale + ((startScale * enlargeScale) - startScale) * ease;
             planetMesh.scale.set(currentScale, currentScale, currentScale);
@@ -127,10 +211,10 @@ function switchPlanet(name) {
             setTimeout(() => {
                 planetMesh.material.map = textureLoader.load(data.texture);
                 planetMesh.material.needsUpdate = true;
-                
-                startTime = null; 
+
+                startTime = null;
                 requestAnimationFrame(animateEnter);
-            }, 300); 
+            }, 300);
         }
     }
 
@@ -140,18 +224,19 @@ function switchPlanet(name) {
         let progress = (timestamp - startTime) / enterDuration;
 
         if (progress < 1) {
-            const ease = 1 - Math.pow(1 - progress, 3); 
-            
-            planetMesh.position.y = topDistance - (topDistance * ease); 
-            
-            const currentScale = targetScale * ease; 
+            const ease = 1 - Math.pow(1 - progress, 3);
+
+            planetMesh.position.y = topDistance - (topDistance * ease);
+
+            const currentScale = targetScale * ease;
             planetMesh.scale.set(currentScale, currentScale, currentScale);
 
             requestAnimationFrame(animateEnter);
         } else {
             planetMesh.position.y = 0;
             planetMesh.scale.set(targetScale, targetScale, targetScale);
-            isAnimating = false; 
+            isAnimating = false;
+            if (onComplete) onComplete();
         }
     }
 

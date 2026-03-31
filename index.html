@@ -11,6 +11,7 @@
     <body>
         <div id="cockpit">
             <div id="screen">
+                <div class="scanlines"></div>
                 <div id="planet-container"></div>
                 <div id="extraction-popup">
                     <div id="popup-content">
@@ -22,14 +23,31 @@
             </div> 
             <div id="dashboard">
                 <div id="map-panel">
-                    <iframe src="map.html" id="map" allowfullscreen></iframe>
+                     <div id="map">
+                        <div class="map-corner top-left"></div>
+                        <div class="map-corner top-right"></div>
+                        <div class="map-corner bottom-left"></div>
+                        <div class="map-corner bottom-right"></div>
+                        <svg class="path-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <polyline points="10,70 36,30 63,70 90,30" />
+                        </svg>
+                        <button id="Gaia" class="planet p1">Gaia</button>
+                        <button id="Eros" class="planet p2">Eros</button>
+                        <button id="Ares" class="planet p3">Ares</button>
+                        <button id="Hera" class="planet p4">Hera</button>
+                     </div>
                     <div class="label">ATLAS</div>
                 </div>
                 <div id="motion">
+                    <div class="status-indicator-top"></div>
+                    <div class="status-indicator-bottom"></div>
                     <button id="next-planet" class="buttons">NEXT PLANET</button>
                     <button id="orbit" class="buttons">ORBIT</button>
                 </div>
                 <div id="time-machine">
+                    <div class="status-indicator-top"></div>
+                    <div class="status-indicator-bottom"></div>
+                    <div class="inner-frame"></div>
                     <div id="time-screen">1x</div>
                     <div id="controls">
                         <button id="backward" class="buttons small" >&lt;&lt;</button>
@@ -38,6 +56,9 @@
                     <div class="label">Time Machine</div>
                 </div>
                 <div id="description-panel">
+                    <div class="status-indicator-top"></div>
+                    <div class="status-indicator-bottom"></div>
+                    <div class="inner-frame"></div>
                     <h3 id="planet-name">Gaia</h3>
                     <p id="description">This shows the information of the creator of this universe</p>
                     <p id="orbit-warning">Orbit this planet to extract information</p>

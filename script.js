@@ -1,18 +1,70 @@
+// ===== PLANET BUTTON CLICK HANDLERS =====
+function setPlanetButtonsEnabled(enabled) {
+    document.querySelectorAll('.planet').forEach(button => {
+        button.style.pointerEvents = enabled ? 'auto' : 'none';
+        button.style.cursor = enabled ? 'pointer' : 'not-allowed';
+    });
+}
+
+document.querySelectorAll('.planet').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const nextKey = e.target.id;
+
+        if (isAnimating || isOrbiting || planetKeys[currentPlanetIndex] === nextKey) return;
+
+        currentPlanetIndex = planetKeys.indexOf(nextKey);
+        
+        // Disable buttons during transition
+        setPlanetButtonsEnabled(false);
+        
+        switchPlanet(nextKey, () => {
+            // Re-enable buttons after animation completes
+            setPlanetButtonsEnabled(true);
+        });
+
+        tellMapToUpdate(nextKey);
+
+        const planetNameEl = document.getElementById("planet-name");
+        const descriptionEl = document.getElementById("description");
+
+        planetNameEl.style.transition = "opacity 2s ease-out";
+        descriptionEl.style.transition = "opacity 2s ease-out";
+        planetNameEl.style.opacity = 0;
+        descriptionEl.style.opacity = 0;
+
+        setTimeout(() => {
+            planetNameEl.textContent = planets[nextKey].displayName;
+            descriptionEl.textContent = planets[nextKey].description;
+
+            planetNameEl.style.transition = "opacity 2s ease-out";
+            descriptionEl.style.transition = "opacity 2s ease-out";
+            planetNameEl.style.opacity = 1;
+            descriptionEl.style.opacity = 1;
+        }, 2500);
+    });
+});
+
 // ===== NEXT PLANET BUTTON =====
 document.getElementById("next-planet").addEventListener("click", () => {
     if (isAnimating || isOrbiting) return;
 
     currentPlanetIndex = (currentPlanetIndex + 1) % planetKeys.length;
     const nextKey = planetKeys[currentPlanetIndex];
-    
-    switchPlanet(nextKey);
+
+    // Disable buttons during transition
+    setPlanetButtonsEnabled(false);
+
+    switchPlanet(nextKey, () => {
+        // Re-enable buttons after animation completes
+        setPlanetButtonsEnabled(true);
+    });
 
     const planetNameEl = document.getElementById("planet-name");
     const descriptionEl = document.getElementById("description");
     planetNameEl.style.transition = "opacity 2s ease-out";
     descriptionEl.style.transition = "opacity 2s ease-out";
 
-    planetNameEl.style.opacity = 0; 
+    planetNameEl.style.opacity = 0;
     descriptionEl.style.opacity = 0;
 
 
@@ -21,8 +73,8 @@ document.getElementById("next-planet").addEventListener("click", () => {
         descriptionEl.textContent = planets[nextKey].description;
         planetNameEl.style.transition = "opacity 2s ease-out";
         descriptionEl.style.transition = "opacity 2s ease-out";
-        planetNameEl.style.opacity = 1; 
-        descriptionEl.style.opacity = 1; 
+        planetNameEl.style.opacity = 1;
+        descriptionEl.style.opacity = 1;
         tellMapToUpdate(nextKey);
     }, 2500);
 });
@@ -126,10 +178,10 @@ const extractedInfo = document.getElementById("extracted-info");
 document.getElementById("extract").addEventListener("click", () => {
     const currentPlanetKey = planetKeys[currentPlanetIndex];
     const data = planets[currentPlanetKey];
-    
-    extractedTitle.textContent = `${data.displayName} Data`;
-    extractedInfo.textContent = data.extractedData;
-    
+
+    extractedTitle.textContent = data.displayName;
+    extractedInfo.innerHTML = data.extractedData;
+
     extractionPopup.classList.add("show");
 });
 
@@ -137,14 +189,12 @@ closePopupBtn.addEventListener("click", () => {
     extractionPopup.classList.remove("show");
 });
 
-// ===== IFRAME WALKIE-TALKIE HELPER =====
+// ===== MAP BUTTON ACTIVE STATE HELPER =====
 function tellMapToUpdate(planetId) {
-    const mapIframe = document.querySelector("iframe"); 
-    if (mapIframe && mapIframe.contentWindow) {
-        mapIframe.contentWindow.postMessage({
-            type: 'UPDATE_MAP',
-            planetId: planetId
-        }, '*');
+    document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
+    const activePlanet = document.getElementById(planetId);
+    if (activePlanet) {
+        activePlanet.classList.add('active');
     }
 }
 
@@ -152,35 +202,4 @@ window.addEventListener("load", () => {
     setTimeout(() => {
         tellMapToUpdate(planetKeys[currentPlanetIndex]);
     }, 500);
-});
-
-window.addEventListener('message', (event) => {
-    if (event.data.type === 'CHANGE_PLANET') {
-        const nextKey = event.data.planetId;
-        
-        if (isAnimating || isOrbiting || planetKeys[currentPlanetIndex] === nextKey) return;
-        
-        currentPlanetIndex = planetKeys.indexOf(nextKey);
-        switchPlanet(nextKey);
-        
-        tellMapToUpdate(nextKey);
-        
-        const planetNameEl = document.getElementById("planet-name");
-        const descriptionEl = document.getElementById("description");
-
-        planetNameEl.style.transition = "opacity 2s ease-out";
-        descriptionEl.style.transition = "opacity 2s ease-out";
-        planetNameEl.style.opacity = 0; 
-        descriptionEl.style.opacity = 0; 
-
-        setTimeout(() => {
-            planetNameEl.textContent = planets[nextKey].displayName;
-            descriptionEl.textContent = planets[nextKey].description;
-            
-            planetNameEl.style.transition = "opacity 2s ease-out";
-            descriptionEl.style.transition = "opacity 2s ease-out";
-            planetNameEl.style.opacity = 1; 
-            descriptionEl.style.opacity = 1; 
-        }, 2500); 
-    }
 });
